@@ -32,23 +32,20 @@ def authenticate_gmail():
 
 
     creds = None
-
-    # Try loading saved token
     if os.path.exists(TOKEN_PATH):
         creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
-
-    # If no valid token, run auth flow
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
-            # creds = flow.run_local_server(port=0)
-            creds = flow.run_console()
-        # Save the token for future runs
+            auth_url, _ = flow.authorization_url(prompt='consent')
+            print(f"\n🔐 Go to this URL and log in:\n{auth_url}\n")
+            code = input("🔑 Paste the authorization code here: ")
+            flow.fetch_token(code=code)
+            creds = flow.credentials
         with open(TOKEN_PATH, 'w') as token:
             token.write(creds.to_json())
-
     return build('gmail', 'v1', credentials=creds)
 
 
