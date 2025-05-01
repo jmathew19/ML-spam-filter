@@ -20,18 +20,17 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.AZURE_HOST }} >> ~/.ssh/known_hosts
 
-        - name: SSH and Deploy
-        run: |
-          ssh ${{ secrets.AZURE_USER }}@${{ secrets.AZURE_HOST }} << 'EOF'
-            cd /home/${{ secrets.AZURE_USER }}
-            if [ ! -d "spam-api" ]; then
-              git clone https://github.com/jmathew19/ML-spam-filter.git spam-api
-            fi
-            cd spam-api
-            git pull
-            sudo docker build -t spam-api .
-            sudo docker stop spam-api || true
-            sudo docker rm spam-api || true
-            sudo docker run -d -p 80:8000 --name spam-api spam-api
-          EOF
-      
+    - name: SSH and Deploy
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_USER }}@${{ secrets.AZURE_HOST }} << 'EOF'
+          cd ~
+          if [ ! -d "ML-spam-filter" ]; then
+            git clone https://github.com/jmathew19/ML-spam-filter.git
+          fi
+          cd ML-spam-filter
+          git pull
+          sudo docker build -t spam-api .
+          sudo docker stop spam-api || true
+          sudo docker rm spam-api || true
+          sudo docker run -d -p 80:8000 --name spam-api spam-api
+        EOF
