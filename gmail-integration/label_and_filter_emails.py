@@ -42,7 +42,9 @@ def authenticate_gmail():
             auth_url, _ = flow.authorization_url(prompt='consent')
             print(f"\n🔐 Go to this URL and log in:\n{auth_url}\n")
             code = input("🔑 Paste the authorization code here: ")
-            flow.fetch_token(code=code)
+            # flow.fetch_token(code=code)
+            flow.fetch_token(code=code, redirect_uri='urn:ietf:wg:oauth:2.0:oob')
+
             creds = flow.credentials
         with open(TOKEN_PATH, 'w') as token:
             token.write(creds.to_json())
