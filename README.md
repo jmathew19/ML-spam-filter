@@ -22,3 +22,11 @@ A full-stack machine learning project that classifies messages as spam or ham us
 - **Model:** Multinomial Naive Bayes
 - Dataset: [SMS Spam Collection](https://www.kaggle.com/datasets/uciml/sms-spam-collection-dataset)
 
+
+
+## Requirements
+fastapi
+uvicorn
+scikit-learn
+joblib
+pydantic
