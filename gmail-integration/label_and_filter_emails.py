@@ -39,13 +39,13 @@ def authenticate_gmail():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
-            auth_url, _ = flow.authorization_url(prompt='consent')
-            print(f"\n🔐 Go to this URL and log in:\n{auth_url}\n")
-            code = input("🔑 Paste the authorization code here: ")
-            # flow.fetch_token(code=code)
-            flow.fetch_token(code=code, redirect_uri='urn:ietf:wg:oauth:2.0:oob')
-
-            creds = flow.credentials
+            # auth_url, _ = flow.authorization_url(prompt='consent')
+            # print(f"\n🔐 Go to this URL and log in:\n{auth_url}\n")
+            # code = input("🔑 Paste the authorization code here: ")
+            # # flow.fetch_token(code=code)
+            # flow.fetch_token(code=code, redirect_uri='urn:ietf:wg:oauth:2.0:oob')
+            # creds = flow.credentials
+            creds = flow.run_local_server(port=8080)
         with open(TOKEN_PATH, 'w') as token:
             token.write(creds.to_json())
     return build('gmail', 'v1', credentials=creds)
